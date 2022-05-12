@@ -32,12 +32,14 @@ public class Spring {
         this.k_stiffness = k_stiffness;
     }
 
-    public Spring inSeries(){
-        return new Spring();
+    public Spring inSeries(Spring spring1, Spring spring2){
+        int k_stiffness = (spring1.getK_stiffness() * spring2.getK_stiffness()) / (spring1.getK_stiffness() + spring2.getK_stiffness());
+        return new Spring(k_stiffness);
     }
 
-    public Spring inParallel(){
-        return new Spring();
+    public Spring inParallel(Spring spring1, Spring spring2){
+        int k_stiffness = spring1.getK_stiffness() + spring2.getK_stiffness();
+        return new Spring(k_stiffness);
     }
 
 
