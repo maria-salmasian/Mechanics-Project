@@ -1,7 +1,11 @@
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Converter {
 
+    private Map<Integer, String> converter = new HashMap<>();
+    int n = 8;
 
     public Converter() {
     }
@@ -17,4 +21,38 @@ public class Converter {
         });
         return "OK";
     }
+
+
+    public int getSprings(Integer[] binary){
+        for(int i = n-1; i >=0; i--){
+            if(binary[i] == 1){
+                int key =  (int)Math.pow(2, n-i-1) ;
+                if(key != 0){
+                    StringBuffer val = new StringBuffer();
+                    val.append("[");
+                    for(int j = 0; j < key; i++){
+                        val.append("[]");
+                    }
+                    val.append("]");
+                    this.converter.put(key, String.valueOf(val));
+                }
+
+            }
+        }
+
+        StringBuffer system = new StringBuffer();
+        system.append("[");
+        converter.values().forEach(k -> system.append(k));
+        system.append("]");
+
+
+
+        SpringArray springArray = new SpringArray();
+        Spring spring = springArray.equivalentSpring(String.valueOf(system));
+
+        return spring.getK_stiffness();
+
+    }
+
+
 }
