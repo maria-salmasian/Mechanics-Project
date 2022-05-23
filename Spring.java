@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Spring {
 
     //TODO:  implement
@@ -16,6 +18,9 @@ public class Spring {
     //dt time step;
 
     Integer k_stiffness = 1;
+    Integer mass = 1;
+
+    ArrayList<Double> coord = new ArrayList<>();
 
     public Spring(Integer k_stiffness) {
         this.k_stiffness = k_stiffness;
@@ -32,6 +37,19 @@ public class Spring {
         this.k_stiffness = k_stiffness;
     }
 
+    public Integer getMass() {
+        return mass;
+    }
+
+    public void setMass(Integer mass) {
+        this.mass = mass;
+    }
+
+
+    public Double getW() {
+        return Math.sqrt(getK_stiffness()/getMass());
+    }
+
     public Spring inSeries(Spring spring1, Spring spring2){
         int k_stiffness = (spring1.getK_stiffness() * spring2.getK_stiffness()) / (spring1.getK_stiffness() + spring2.getK_stiffness());
         return new Spring(k_stiffness);
@@ -44,30 +62,34 @@ public class Spring {
 
 
     public Double[] move(double t, double dt, double x0, double v0) {
-        double e = (Math.pow(x0, 2) * this.k_stiffness)/2 + Math.pow(v0, 2)/2;
-        return coord(e, t, dt);
+        return coord(0, x0,t, v0, dt);
+
     }
 
     public Double[] move(double t, double dt, double x0) {
-        double e = (Math.pow(x0, 2) / 2);
-        return coord(e, t, dt);
+        return coord(0, x0, 0, 0, dt);
+
     }
 
     public Double[] move(double t0, double tl, double dt, double x0, double v0) {
-        double e = (Math.pow(x0, 2) * this.k_stiffness)/2 + Math.pow(v0, 2)/2;
-        double t = tl - t0;
-        return coord(e, t, dt);
+        return coord(t0, x0, tl, v0, dt);
+
     }
 
     public Double[] move(double t0, double tl, double dt, double x0, double v0, double m) {
-        double e = (Math.pow(x0, 2) * this.k_stiffness)/2 + Math.pow(v0, 2)*m/2;
-        double t = tl - t0;
-        return coord(e, t, dt);
+        return coord(t0, x0, tl, v0, dt);
     }
 
 
 
-    private Double[] coord(double e, double t, double dt) {
-        return new Double[0];
+    private Double[] coord(double t0, double x0, double tl, double v0, double dt) {
+        do{
+            double val = x0* Math.cos(getW()*t0) + (v0/getW()) * Math.sin(getW()*t0);
+            this.coord.add(val);
+            t0 += dt;
+        }
+        while (t0<tl);
+
+        return (Double[]) coord.toArray();
     }
 }
